@@ -1,0 +1,124 @@
+# .github/workflows/build.yml
+name: Build and Release
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'  # 예: v1.0.0, v1.0.1 등
+  release:
+    types: [created]
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'  # 사용 중인 Python 버전으로 설정
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller PyQt5 opencv-python numpy
+
+    - name: Build Executable
+      run: |
+        pyinstaller --onefile --windowed --icon=resources/app_icon.ico main.py
+
+    - name: Compress Executable
+      run: |
+        Compress-Archive -Path dist/main.exe -DestinationPath dist/main.exe.zip
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: main-windows
+        path: dist/main.exe.zip
+
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v3
+
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: '3.13'  # 사용 중인 Python 버전으로 설정
+
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install pyinstaller PyQt5 opencv-python numpy
+
+    - name: Build Executable
+      run: |
+        pyinstaller --onefile --windowed --icon=resources/app_icon.icns main.py
+
+    - name: Compress Executable
+      run: |
+        zip -r dist/main.app.zip dist/main.app
+
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v3
+      with:
+        name: main-macos
+        path: dist/main.app.zip
+
+  create-release:
+    needs: [build-windows, build-macos]
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Download Windows Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: main-windows
+        path: ./build
+
+    - name: Download macOS Artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: main-macos
+        path: ./build
+
+    - name: Create GitHub Release
+      id: create_release
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: ${{ github.ref }}
+        release_name: Release ${{ github.ref }}
+        body: |
+          ## v${{ github.ref }}
+          
+          ### 변경 사항
+          - 윈도우용 실행 파일 추가 (`main.exe.zip`)
+          - macOS용 실행 파일 추가 (`main.app.zip`)
+        
+    - name: Upload Windows Executable to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/dist/main.exe.zip
+        asset_name: main.exe.zip
+        asset_content_type: application/zip
+
+    - name: Upload macOS Executable to Release
+      uses: actions/upload-release-asset@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ steps.create_release.outputs.upload_url }}
+        asset_path: ./build/dist/main.app.zip
+        asset_name: main.app.zip
+        asset_content_type: application/zip
