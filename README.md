@@ -1,6 +1,9 @@
-# Seam_Carving (Python)
+# **Seam_Carving (Python)**
 
 
 
-This is Seam_Carving Term Project of algorithm(2024)
+## Introduction
 ---
+**This is Seam_Carving algorithm Term Project**
+
+Our goal is make a 
