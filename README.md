@@ -1,4 +1,4 @@
-# Seam_Carving_Python
+# Seam_Carving (Python)
 
 Hi
 
