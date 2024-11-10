@@ -204,7 +204,7 @@ class SeamCarver:
         for row in range(1, m):
             for col in range(n):
                 output[row, col] = \
-                    energy_map[row, col] + np.amin(output[row - 1, max(col - 1, 0): min(col + 2, n - 1)])
+                    energy_map[row, col] + np.amin(output[row - 1, max(col - 1, 0): min(col + 2, n )]) #n-1 -> n
         return output
 
 
