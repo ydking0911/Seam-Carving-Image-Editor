@@ -1,28 +1,45 @@
 # **Seam_Carving (Python)**
 
 
-
-
-
 ## Introduction
-**This is Seam_Carving algorithm Term Project**
+This is a Seam Carving algorithm Term Project.
 
-The goal of this project is to create a program that can resize jpg files through the seam-carving technique. In addition to resizing, the program also has the function that allows users to designate specific areas to delete/protect and apply the seam-carving.
+The goal of this project is to create a program that can resize JPG files through the seam carving technique. In addition to resizing, the program also allows users to designate specific areas for deletion or protection, and apply the seam carving accordingly.
 
-
-## 시작가이드
-### **Installation**
-```
+## Installation
+```bash
 $ git clone https://github.com/9September/Seam_Carving_Python
 ```
-### **Backend**
-```
+
+## Backend
+```bash
 $ cd Seam_Carving_Python
-$ 업데이트 예정
+$ # 업데이트 예정
 ```
 
-## 주요기능
-* Seam-Carving
-* Delete
-* Protect
-* Realtime tracing for Seam_Carving
+## Useage Example
+```bash
+# GUI Application 실행
+$ python main.py
+
+# Realtime seam carving 실행
+$ python realtime.py path/to/image.jpg
+```
+
+## File Structure
+```bash
+Seam_Carving_Python/
+├── main.py            # GUI 기반 seam carving 실행 파일
+├── realtime.py        # 실시간 seam carving 실행 파일
+├── seam_carving.py    # Seam Carving 알고리즘 구현
+└── Sketcher.py        # 이미지 마스킹 및 스케치 기능 구현
+```
+
+## Dependencies
+```bash
+Python 3.x
+OpenCV
+NumPy
+PyQt5
+```
+
