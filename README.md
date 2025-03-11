@@ -1,4 +1,4 @@
-# **Seam_Carving (Python)**
+# **Seam Carving Image Editor (python)**
 
 
 ## Introduction
